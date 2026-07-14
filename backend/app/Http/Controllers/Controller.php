@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\AuditLog;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+
+class Controller extends BaseController
+{
+    use AuthorizesRequests;
+
+    protected function recordAudit(Request $request, string $action, array $metadata = []): void
+    {
+        AuditLog::create([
+            'user_id' => optional($request->user())->id,
+            'company_id' => optional($request->user())->company_id,
+            'action' => $action,
+            'metadata' => $metadata,
+        ]);
+    }
+}
